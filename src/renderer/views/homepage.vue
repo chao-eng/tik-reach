@@ -219,8 +219,10 @@ const pageTitle = computed(() => {
   if (selectedKeys.value[0] === 'fetch') return '邮箱采集';
   return 'TikReach';
 });
-
-const openGithub = () => { /* ... */ };
+import utils from "@utils/renderer";
+const openGithub = () => {
+  utils.openExternalLink("https://github.com/chao-eng/tik-reach");
+};
 
 // --- 1. 模板配置逻辑 (Subject + Vditor) ---
 const vditorInstance = ref<Vditor | null>(null);
