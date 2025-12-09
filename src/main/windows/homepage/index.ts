@@ -12,14 +12,10 @@ class homepageWindow extends WindowBase {
   private isTaskRunning: boolean = false;
 
   constructor() {
-    const iconPath = process.platform === "win32" ?
-      path.join(appState.mainStaticPath, "tray.ico") :
-      path.join(appState.mainStaticPath, "tray.png");
 
     super({
       width: 1000,
       height: 600,
-      icon: iconPath,
       webPreferences: {
         preload: path.join(__dirname, "preload.js"),
       },

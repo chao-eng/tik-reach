@@ -1,19 +1,23 @@
-# TikReach - 批量邮件发送工具
+# TikReach - TikTok 邮箱采集与模板管理工具
 
-TikReach 是一款基于 **Electron** + **Vue 3** + **TypeScript** 开发的现代化桌面端批量邮件发送应用。它旨在帮助用户通过简单的配置和 Excel 导入，轻松实现邮件的批量发送与管理。
+TikReach 是一款基于 **Electron** + **Vue 3** + **TypeScript** 开发的现代化桌面应用。它专注于帮助用户批量采集 TikTok 用户的公开邮箱，并提供强大的邮件模板管理与导出功能。
 
 ![Main UI](./screenshot/main.png)
-
+![Main UI](./screenshot/main2.png)
 ## ✨ 主要特性
 
-- **SMTP 配置管理**：支持自定义 SMTP 服务器（如 Gmail, QQ 邮箱, 网易邮箱等），并提供连接测试功能。
-- **单条发送**：提供便捷的单条邮件发送界面，支持多收件人。
-- **批量发送**：
-  - 支持导入 Excel (`.xlsx`, `.xls`) 文件批量创建发送任务。
-  - 提供标准 Excel 模板下载。
-  - 实时显示发送进度、成功/失败状态。
-  - 详细的失败原因展示。
-- **现代化 UI**：基于 Ant Design Vue 开发，界面简洁美观，操作直观。
+- **批量邮箱采集**：
+  - 支持批量输入 TikTok 用户名。
+  - 调用本地 Chrome 浏览器（Puppeteer）自动访问主页抓取公开邮箱。
+  - 实时显示采集进度与状态（成功/失败/进行中）。
+- **邮件模板管理**：
+  - 内置 **Markdown** 编辑器 (Vditor)，所见即所得。
+  - 支持配置邮件主题 (Subject) 与正文 (Body)。
+  - 支持变量替换（如 `{{username}}` 自动替换为目标用户名）。
+- **数据导出**：
+  - 将采集成功的邮箱数据导出为 Excel (`.xlsx`) 文件。
+  - 导出文件自动包含预设的邮件主题与渲染后的 HTML 正文，方便对接其他邮件发送工具。
+- **现代化 UI**：基于 Ant Design Vue 开发，界面简洁美观。
 - **跨平台**：支持 Windows, macOS 和 Linux。
 
 ## 🛠️ 技术栈
@@ -21,8 +25,8 @@ TikReach 是一款基于 **Electron** + **Vue 3** + **TypeScript** 开发的现�
 - **Core**: [Electron](https://www.electronjs.org/)
 - **Frontend**: [Vue 3](https://vuejs.org/) + [TypeScript](https://www.typescriptlang.org/) + [Vite](https://vitejs.dev/)
 - **UI Framework**: [Ant Design Vue](https://www.antdv.com/)
-- **Mail Engine**: [Nodemailer](https://nodemailer.com/)
-- **Excel Processing**: [SheetJS (xlsx)](https://sheetjs.com/)
+- **Automation**: [Puppeteer Core](https://pptr.dev/)
+- **Editor**: [Vditor](https://b3log.org/vditor/)
 
 ## 🚀 快速开始
 
@@ -52,6 +56,27 @@ yarn run dev
 ```
 
 启动后，应用将以开发模式运行，支持热重载。
+
+## 📖 使用指南
+
+1.  **环境配置**：
+    *   首次使用请进入“获取邮箱”页面，配置您的本地 Chrome 浏览器路径（例如：`C:\Program Files\Google\Chrome\Application\chrome.exe` 或 macOS `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome`）。
+    *   点击“保存配置”。
+
+2.  **配置邮件模板**：
+    *   进入“模板配置”页面。
+    *   输入邮件主题。
+    *   在编辑器中编写邮件正文，支持 Markdown 语法。使用 `{{username}}` 作为变量，导出时会自动替换为对应的 TikTok 用户名。
+    *   点击“保存模板”。
+
+3.  **执行采集任务**：
+    *   进入“获取邮箱”页面，点击“新建采集任务”。
+    *   批量粘贴目标 TikTok 用户名（每行一个）。
+    *   点击“开始采集”，系统将自动启动浏览器进行抓取。
+
+4.  **导出数据**：
+    *   采集完成后，点击“导出数据”。
+    *   系统将生成包含“用户邮箱”、“邮件主题”、“邮件正文(HTML)”的 Excel 文件。
 
 ## 📦 打包构建
 
@@ -91,25 +116,6 @@ sudo xattr -rd com.apple.quarantine /Applications/你的应用名.app
 ```
 
 现在可以正常打开应用了。
-
-
-## 📖 使用指南
-
-1.  **配置邮箱**：
-    *   进入“邮件配置”页面。
-    *   填写 SMTP 服务器地址（如 `smtp.qq.com`）、端口（如 `465`）。
-    *   填写发件人邮箱和授权码（注意：通常不是登录密码，而是邮箱服务商提供的 SMTP 授权码）。
-    *   点击“测试连接”确保配置正确，然后点击“保存配置”。
-
-2.  **发送单条邮件**：
-    *   进入“发送邮件”页面，填写收件人、主题、内容，并可添加附件。
-
-3.  **批量发送**：
-    *   进入“批量发送”页面。
-    *   点击“下载模板”获取 Excel 模板文件。
-    *   在 Excel 中按格式填入收件人、主题、内容及附件路径（可选，多个附件用英文分号 `;` 分隔）。
-    *   拖拽或点击上传 Excel 文件。
-    *   点击“开始发送”，系统将自动处理队列。
 
 ## 📄 许可证
 
