@@ -130,15 +130,7 @@ module.exports = {
   // Maker用于最终生成对应平台的安装包
   // 更多Maker请参考：https://www.electronforge.io/config/makers
   makers: [
-    {
-      // 仅支持Windows平台
-      name: "@electron-forge/maker-squirrel",
-      config: {
-        // 用于数字签名的证书路径和密码
-        // certificateFile: './cert.pfx',
-        // certificatePassword: process.env.CERTIFICATE_PASSWORD
-      },
-    },
+
     {
       // 仅支持macOS平台
       name: "@electron-forge/maker-dmg",
