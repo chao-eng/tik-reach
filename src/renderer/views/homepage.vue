@@ -134,7 +134,7 @@
     </a-layout>
 
     <a-modal
-      v-model:visible="isModalVisible"
+      v-model:open="isModalVisible"
       title="输入目标 TikTok 用户名"
       ok-text="开始采集"
       cancel-text="取消"
