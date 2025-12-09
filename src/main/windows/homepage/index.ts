@@ -1,11 +1,16 @@
 import path from "path";
 import WindowBase from "../window-base";
 import configManager from "./config-manager";
-import puppeteer from 'puppeteer-core';
+import vanillaPuppeteer from 'puppeteer-core';
+import { addExtra } from 'puppeteer-extra';
+import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import { app, WebContents, dialog } from 'electron';
 import appState from "../../app-state";
 import * as XLSX from 'xlsx'; // 引入 xlsx
 import fs from "fs";
+
+const puppeteer = addExtra(vanillaPuppeteer);
+puppeteer.use(StealthPlugin());
 
 class homepageWindow extends WindowBase {
   // 1. 新增一个控制停止的标志位

@@ -30,6 +30,8 @@
     "electron-log": "^5.1.0",
     "electron-store": "^11.0.2",
     "puppeteer-core": "^24.32.1",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
     "uuid": "^9.0.1",
     "vditor": "^3.11.2",
     "xlsx": "^0.18.5"

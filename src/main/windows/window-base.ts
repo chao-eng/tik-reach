@@ -45,7 +45,7 @@ abstract class WindowBase {
       url = `file://${app.getAppPath()}/build/renderer/index.html#${routerPath}`;
     } else {
       const rendererPort = process.argv[2];
-      url = `http://localhost:${rendererPort}/#${routerPath}`;
+      url = `http://127.0.0.1:${rendererPort}/#${routerPath}`;
     }
 
     console.log(`Load URL: ${url}`);
