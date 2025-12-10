@@ -62,8 +62,8 @@
           <div v-else-if="selectedKeys[0] === 'fetch'">
              
              <a-card size="small" title="环境配置" style="margin-bottom: 24px; border-color: #e8e8e8;">
-               <div style="display: flex; gap: 10px; width: 100%;">
-                 <div style="flex: 1;">
+               <div style="display: flex; gap: 10px; width: 100%; flex-wrap: wrap;">
+                 <div style="flex: 1; min-width: 300px;">
                     <a-input 
                       v-model:value="chromePath" 
                       placeholder="请输入 Chrome 浏览器可执行文件路径 (例如: C:\Program Files\Google\Chrome\Application\chrome.exe)"
@@ -75,6 +75,12 @@
                  <a-button type="primary" size="large" ghost @click="saveChromeConfig" :loading="savingChrome">
                    保存配置
                  </a-button>
+               </div>
+               
+               <div style="margin-top: 16px; display: flex; align-items: center;">
+                 <span style="margin-right: 12px;">无头模式 (Headless): </span>
+                 <a-switch v-model:checked="chromeHeadless" checked-children="开启" un-checked-children="关闭" />
+                 <span style="margin-left: 12px; color: #999; font-size: 12px;">windows 系统建议关闭。开启后浏览器将在后台静默运行，不会显示界面。</span>
                </div>
              </a-card>
 
@@ -297,13 +303,17 @@ const saveTemplateConfig = async () => {
 
 // --- 2. 邮箱采集逻辑 (保持不变) ---
 const chromePath = ref('');
+const chromeHeadless = ref(true); // 默认开启无头
 const savingChrome = ref(false);
 
 const loadChromeConfig = async () => {
   try {
     const config = await getElectronApi().getConfig('chrome_path');
-    if (config && config.path) {
-      chromePath.value = config.path;
+    if (config) {
+      if (config.path) chromePath.value = config.path;
+      if (typeof config.headless !== 'undefined') {
+        chromeHeadless.value = config.headless;
+      }
     }
   } catch (e) { console.error(e); }
 };
@@ -312,7 +322,10 @@ const saveChromeConfig = async () => {
   if (!chromePath.value) return message.warning('请输入 Chrome 路径');
   savingChrome.value = true;
   try {
-    await getElectronApi().setConfig('chrome_path', { path: chromePath.value });
+    await getElectronApi().setConfig('chrome_path', { 
+      path: chromePath.value,
+      headless: chromeHeadless.value
+    });
     message.success('配置已保存');
   } catch (e) {
     message.error('保存失败');
@@ -341,7 +354,7 @@ const usernameCount = computed(() => {
 const fetchColumns = [
     { title: 'TikTok 用户名', dataIndex: 'username', key: 'username', width: 250 },
     { title: '抓取结果 (Email)', dataIndex: 'email', key: 'email' },
-    { title: '当前状态', dataIndex: 'status', key: 'status', width: 150, align: 'center' },
+    { title: '当前状态', dataIndex: 'status', key: 'status', width: 150, align: 'center' as const },
 ];
 
 const openFetchModal = () => {
@@ -379,7 +392,8 @@ const handleStartFetch = async () => {
     const api = getElectronApi();
     const res = await api.startFetchTask({
         chromePath: chromePath.value,
-        users: uniqueUsers
+        users: uniqueUsers,
+        headless: chromeHeadless.value // 传递无头配置
     });
     
     if(res.status) {

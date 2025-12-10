@@ -26,6 +26,7 @@ declare module 'vue' {
     AModal: typeof import('ant-design-vue/es')['Modal']
     AProgress: typeof import('ant-design-vue/es')['Progress']
     ASpace: typeof import('ant-design-vue/es')['Space']
+    ASwitch: typeof import('ant-design-vue/es')['Switch']
     ATable: typeof import('ant-design-vue/es')['Table']
     ATag: typeof import('ant-design-vue/es')['Tag']
     ATextarea: typeof import('ant-design-vue/es')['Textarea']

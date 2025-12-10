@@ -37,7 +37,7 @@ class homepageWindow extends WindowBase {
     });
 
     // 开始采集任务
-    this.registerIpcHandleHandler('startFetchTask', async (event, { chromePath, users }) => {
+    this.registerIpcHandleHandler('startFetchTask', async (event, { chromePath, users, headless }) => {
       if (!chromePath || !users || users.length === 0) {
         return { status: false, msg: '参数不完整' };
       }
@@ -45,7 +45,10 @@ class homepageWindow extends WindowBase {
       // 2. 启动时，将标志位设为 true
       this.isTaskRunning = true;
 
-      this.runScraper(event.sender, chromePath, users);
+      // 默认 headless 为 true
+      const _headless = (typeof headless === 'boolean') ? headless : true;
+
+      this.runScraper(event.sender, chromePath, users, _headless);
       return { status: true, msg: '后台任务已启动' };
     });
 
@@ -123,12 +126,12 @@ class homepageWindow extends WindowBase {
 
   }
 
-  async runScraper(sender: WebContents, executablePath: string, users: string[]) {
+  async runScraper(sender: WebContents, executablePath: string, users: string[], headless: boolean) {
     let browser;
     try {
       browser = await puppeteer.launch({
         executablePath: executablePath,
-        headless: true, // 保持无头模式
+        headless: headless,
         defaultViewport: null,
         args: ['--no-sandbox', '--disable-setuid-sandbox']
       });
