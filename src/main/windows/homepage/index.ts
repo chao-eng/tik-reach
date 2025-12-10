@@ -172,7 +172,7 @@ class homepageWindow extends WindowBase {
           }
 
         } catch (error: any) {
-          this.sendUpdateToFrontend(sender, { username, status: 'failed', email: '访问异常' });
+          this.sendUpdateToFrontend(sender, { username, status: 'failed', email: error.message });
         }
 
         const delay = Math.floor(Math.random() * 3000) + 2000;
