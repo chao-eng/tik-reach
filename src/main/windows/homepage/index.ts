@@ -161,7 +161,9 @@ class homepageWindow extends WindowBase {
 
           // (这里省略中间的爬虫逻辑，保持不变...)
           try { await page.waitForSelector('[data-e2e="user-bio"]', { timeout: 5000 }); } catch (e) { }
+          // javascript-obfuscator:disable
           const pageText = await page.evaluate(() => document.body.innerText);
+          // javascript-obfuscator:enable
 
           const match = pageText.match(emailRegex);
 
