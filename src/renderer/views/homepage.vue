@@ -121,6 +121,7 @@
                       </a-tag>
                    </template>
                    
+                   
                    <template v-if="column.key === 'email'">
                       <span v-if="record.email" style="font-weight: 500; color: #1890ff;">{{ record.email }}</span>
                       <span v-else style="color: #ccc;">-</span>
@@ -433,18 +434,16 @@ const stopFetching = async() => {
 };
 
 const exportEmails = async () => {
-    // 筛选出采集成功的数据
-    const successList = fetchedData.value.filter(item => item.status === 'success' && item.email);
-
-    if(successList.length === 0) {
-        return message.warning("暂无【采集成功】的数据可导出");
+    // 导出所有数据，不再过滤只导出成功的
+    if(fetchedData.value.length === 0) {
+        return message.warning("暂无数据可导出");
     }
 
     // 可以在这里加一个 loading 状态
     const hide = message.loading('正在生成 Excel...', 0);
 
     try {
-        const res = await getElectronApi().exportToExcel(JSON.parse(JSON.stringify(successList)));
+        const res = await getElectronApi().exportToExcel(JSON.parse(JSON.stringify(fetchedData.value)));
         hide(); // 关闭 loading
         
         if (res.status) {

@@ -60,8 +60,8 @@ class homepageWindow extends WindowBase {
     });
 
     // --- 导出 Excel ---
-    this.registerIpcHandleHandler('exportToExcel', async (event, successData: any[]) => {
-      if (!successData || successData.length === 0) {
+    this.registerIpcHandleHandler('exportToExcel', async (event, allData: any[]) => {
+      if (!allData || allData.length === 0) {
         return { status: false, msg: '没有可导出的数据' };
       }
 
@@ -74,15 +74,16 @@ class homepageWindow extends WindowBase {
         const rawBody = templateConfig.htmlContent || templateConfig.content || "";
 
         // 2. 处理数据：替换变量
-        const exportRows = successData.map(item => {
+        const exportRows = allData.map(item => {
           // 替换 {{username}} 为实际用户名
           // 正则替换在 HTML 字符串中同样有效
           const processedBody = rawBody.replace(/{{username}}/g, item.username);
 
           return {
-            "用户邮箱": item.email,
+            "用户邮箱": item.status === 'success' ? (item.email || '') : '', // 只有成功的才填写邮箱
             "邮件主题": subject,
-            "邮件正文(HTML)": processedBody // 列名可以改一下提示这是 HTML
+            "邮件正文(HTML)": processedBody, // 列名可以改一下提示这是 HTML
+            "TikTok用户名": item.username // 用户名放在最后一列
           };
         });
 
@@ -93,7 +94,8 @@ class homepageWindow extends WindowBase {
         const wscols = [
           { wch: 25 }, // 邮箱
           { wch: 30 }, // 主题
-          { wch: 80 }  // 正文 (HTML通常比较长，列宽设大一点)
+          { wch: 80 }, // 正文 (HTML通常比较长，列宽设大一点)
+          { wch: 20 }  // TikTok用户名
         ];
         worksheet['!cols'] = wscols;
 
@@ -159,8 +161,9 @@ class homepageWindow extends WindowBase {
           const targetUrl = `https://www.tiktok.com/@${username}`;
           await page.goto(targetUrl, { waitUntil: 'domcontentloaded', timeout: 30000 });
 
-          // (这里省略中间的爬虫逻辑，保持不变...)
+          // 等待用户信息加载
           try { await page.waitForSelector('[data-e2e="user-bio"]', { timeout: 5000 }); } catch (e) { }
+
           // javascript-obfuscator:disable
           const pageText = await page.evaluate(() => document.body.innerText);
           // javascript-obfuscator:enable
